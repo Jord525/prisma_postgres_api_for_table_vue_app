@@ -18,7 +18,6 @@ import cors from "cors";
 import swaggerDocs from "./src/utils/swagger";
 import checkAuth from "./src/middleware/checkAuth";
 import { registerValidation } from "./src/middleware/checkUnique";
-import { consol } from "./src/middleware/console";
 const app: Express = express();
 
 dotenv.config();
@@ -35,7 +34,7 @@ app.get("/auth/me", checkAuth, me);
 app.post("/auth/login", login);
 app.post("/auth/register", registerValidation, register);
 app.get("/users", getAllUsers);
-app.patch("/user/:id", consol, updateUser);
+app.patch("/user/:id", updateUser);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
