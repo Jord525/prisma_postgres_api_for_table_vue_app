@@ -1,0 +1,33 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const TableController_1 = require("./src/controllers/TableController");
+const dotenv_1 = __importDefault(require("dotenv"));
+const users_service_1 = require("./src/users/users.service");
+const cors_1 = __importDefault(require("cors"));
+const swagger_1 = __importDefault(require("./src/utils/swagger"));
+const checkAuth_1 = __importDefault(require("./src/middleware/checkAuth"));
+const checkUnique_1 = require("./src/middleware/checkUnique");
+const console_1 = require("./src/middleware/console");
+const app = (0, express_1.default)();
+dotenv_1.default.config();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+const port = 3000;
+app.get("/tables", TableController_1.findAll);
+app.post("/table", TableController_1.create);
+app.patch("/table/:id", TableController_1.updateOneTable);
+app.get("/table/:name", TableController_1.findOne);
+app.delete("/table/:id", TableController_1.deleteOne);
+app.get("/auth/me", checkAuth_1.default, users_service_1.me);
+app.post("/auth/login", users_service_1.login);
+app.post("/auth/register", checkUnique_1.registerValidation, users_service_1.register);
+app.get("/users", users_service_1.getAllUsers);
+app.patch("/user/:id", console_1.consol, users_service_1.updateUser);
+app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    (0, swagger_1.default)(app, port);
+});
